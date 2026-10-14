@@ -1,10 +1,63 @@
-import React from "react";
+import React, { useEffect, useRef, useState } from "react";
 
 // font import - or move this link into index.html
 const fontImport =
   "@import url('https://fonts.googleapis.com/css2?family=Alfa+Slab+One&family=Caveat:wght@400;600;700&family=Courier+Prime:wght@400;700&display=swap');";
 
 const skills = ["React", "Node.js", "Express", "MongoDB", "JavaScript", "REST APIs", "Tailwind", "Git"];
+
+// small animations. they only start once the section scrolls into view (class "about-in")
+const animations = `
+  .pop { opacity: 0; }
+  .about-in .pop { animation: letterDrop 0.6s cubic-bezier(0.2, 0.8, 0.2, 1) both; }
+  .row1 .pop:nth-child(1) { animation-delay: 0.1s; }
+  .row1 .pop:nth-child(2) { animation-delay: 0.2s; }
+  .row1 .pop:nth-child(3) { animation-delay: 0.3s; }
+  .row1 .pop:nth-child(4) { animation-delay: 0.4s; }
+  .row1 .pop:nth-child(5) { animation-delay: 0.5s; }
+  .row2 .pop:nth-child(1) { animation-delay: 0.65s; }
+  .row2 .pop:nth-child(2) { animation-delay: 0.75s; }
+
+  .fade { opacity: 0; }
+  .about-in .fade { animation: fadeUp 0.8s ease both; }
+  .about-in .d1 { animation-delay: 0.9s; }
+  .about-in .d2 { animation-delay: 1.1s; }
+  .about-in .d3 { animation-delay: 1.3s; }
+
+  .float { animation: floaty 3.5s ease-in-out infinite; }
+  .twinkle { animation: twinkle 1.8s ease-in-out infinite alternate; }
+
+  @keyframes letterDrop { from { opacity: 0; translate: 0 -40px; } to { opacity: 1; translate: 0 0; } }
+  @keyframes fadeUp { from { opacity: 0; translate: 0 20px; } to { opacity: 1; translate: 0 0; } }
+  @keyframes floaty { 0%, 100% { translate: 0 0; } 50% { translate: 0 -10px; } }
+  @keyframes twinkle { from { opacity: 0.3; } to { opacity: 1; } }
+
+  @media (prefers-reduced-motion: reduce) {
+    .pop, .fade { opacity: 1; animation: none !important; }
+    .float, .twinkle { animation: none; }
+  }
+`;
+
+// true once the element has been scrolled into view
+function useInView(threshold = 0.2) {
+  const ref = useRef(null);
+  const [inView, setInView] = useState(false);
+
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) setInView(true);
+      },
+      { threshold }
+    );
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, [threshold]);
+
+  return [ref, inView];
+}
 
 /* ---------------- doodles (hand drawn style svgs) ---------------- */
 
@@ -13,7 +66,7 @@ function PlaneDoodle({ className = "" }) {
   return (
     <svg
       viewBox="0 0 260 110"
-      className={`text-[#1b1b1b] ${className}`}
+      className={`float text-[#1b1b1b] ${className}`}
       fill="none"
       stroke="currentColor"
       strokeWidth="2"
@@ -54,7 +107,7 @@ function BurstDoodle({ className = "" }) {
   return (
     <svg
       viewBox="0 0 50 50"
-      className={`h-10 w-10 text-[#1b1b1b] ${className}`}
+      className={`twinkle h-10 w-10 text-[#1b1b1b] ${className}`}
       fill="none"
       stroke="currentColor"
       strokeWidth="2.5"
@@ -133,7 +186,7 @@ function Letter({ children, color, tilt }) {
 
   return (
     <span
-      className={`inline-block px-2 py-1 font-['Alfa_Slab_One'] text-6xl leading-none shadow-md sm:px-3 sm:text-8xl ${colors[color]} ${tilt}`}
+      className={`pop inline-block px-2 py-1 font-['Alfa_Slab_One'] text-6xl leading-none shadow-md sm:px-3 sm:text-8xl ${colors[color]} ${tilt}`}
     >
       {children}
     </span>
@@ -148,27 +201,31 @@ function Pin({ className = "" }) {
 /* ---------------- page ---------------- */
 
 export default function About() {
+  const [ref, inView] = useInView(0.2);
+
   return (
     <section
       id="about"
-      className="relative min-h-screen overflow-hidden bg-[#8a8a8a] px-6 py-20 font-['Courier_Prime'] text-[#1b1b1b]"
+      ref={ref}
+      className={`relative min-h-screen overflow-hidden bg-[#7d7d7d] px-6 py-20 font-['Courier_Prime'] text-[#1b1b1b] ${inView ? "about-in" : ""}`}
       style={{
-        // faint dots like the reference
-        backgroundImage: "radial-gradient(rgba(0,0,0,0.18) 1px, transparent 1px)",
-        backgroundSize: "14px 14px",
+        // same wall as Home.jsx: spotlight on top, fine dot grid, dark corner
+        backgroundImage:
+          "radial-gradient(ellipse at 50% 0%, rgba(255,255,255,0.55) 0%, rgba(255,255,255,0.12) 38%, transparent 62%), radial-gradient(rgba(0,0,0,0.16) 1px, transparent 1.2px), radial-gradient(circle at 80% 80%, rgba(0,0,0,0.28), transparent 55%)",
+        backgroundSize: "100% 100%, 4px 4px, 100% 100%",
       }}
     >
-      <style>{fontImport}</style>
+      <style>{fontImport}{animations}</style>
 
       {/* handwritten notes in the corners (desktop only) */}
-      <div className="absolute left-12 top-24 hidden lg:block">
+      <div className="fade d3 absolute left-12 top-24 hidden lg:block">
         <p className="-rotate-6 font-['Caveat'] text-xl leading-tight">
           Better code <br /> for a kinder internet.
         </p>
         <ArrowDoodle className="ml-24 mt-1 rotate-[25deg] -scale-x-100" />
       </div>
 
-      <div className="absolute right-12 top-24 hidden lg:block">
+      <div className="fade d3 absolute right-12 top-24 hidden lg:block">
         <p className="-rotate-[8deg] font-['Caveat'] text-xl leading-tight">
           Build <br /> Learn <br /> Grow
         </p>
@@ -178,14 +235,14 @@ export default function About() {
 
       {/* title */}
       <div className="relative mx-auto flex max-w-3xl flex-col items-center gap-1">
-        <div className="flex">
+        <div className="row1 flex">
           <Letter color="yellow" tilt="-rotate-3">A</Letter>
           <Letter color="dark" tilt="rotate-2">B</Letter>
           <Letter color="paper" tilt="-rotate-1">O</Letter>
           <Letter color="dark" tilt="rotate-3">U</Letter>
           <Letter color="yellow" tilt="-rotate-2">T</Letter>
         </div>
-        <div className="flex">
+        <div className="row2 flex">
           <Letter color="yellow" tilt="rotate-2">M</Letter>
           <Letter color="paper" tilt="-rotate-3">E</Letter>
         </div>
@@ -200,7 +257,7 @@ export default function About() {
       {/* main layout: sticky | note | sticky */}
       <div className="mx-auto mt-14 grid max-w-6xl items-end gap-10 lg:grid-cols-[1fr_1.6fr_1fr]">
         {/* left sticky */}
-        <div className="relative order-2 mx-auto w-52 -rotate-3 bg-[#E6E1D3] p-5 pt-8 shadow-lg lg:order-1 lg:mx-0 lg:justify-self-end">
+        <div className="fade d2 relative order-2 mx-auto w-52 -rotate-3 bg-[#E6E1D3] transition-transform duration-300 hover:rotate-0 hover:scale-105 p-5 pt-8 shadow-lg lg:order-1 lg:mx-0 lg:justify-self-end">
           <Pin className="left-3 top-3" />
           <h3 className="font-['Caveat'] text-2xl font-bold underline">Beyond code</h3>
           <p className="mt-2 font-['Caveat'] text-xl leading-tight">
@@ -210,7 +267,7 @@ export default function About() {
         </div>
 
         {/* the one main note */}
-        <div className="relative order-1 lg:order-2">
+        <div className="fade d1 relative order-1 lg:order-2">
           <div
             className="relative rotate-[0.5deg] bg-[#EDE9DF] px-8 pb-10 pt-12 shadow-xl"
             style={{
@@ -260,7 +317,7 @@ export default function About() {
         </div>
 
         {/* right sticky */}
-        <div className="relative order-3 mx-auto w-56 rotate-3 bg-[#EDB52A] p-5 pt-8 shadow-lg lg:mx-0 lg:justify-self-start">
+        <div className="fade d3 relative order-3 mx-auto w-56 rotate-3 bg-[#EDB52A] transition-transform duration-300 hover:rotate-0 hover:scale-105 p-5 pt-8 shadow-lg lg:mx-0 lg:justify-self-start">
           <Pin className="right-3 top-3" />
           <h3 className="font-['Caveat'] text-2xl font-bold uppercase underline">Currently exploring</h3>
           <p className="mt-2 font-['Caveat'] text-xl leading-tight">

@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Mail, Linkedin, Github, MapPin, Lightbulb, Send, Megaphone, ArrowRight } from "lucide-react";
+import { Mail, MapPin, Lightbulb, Send, Megaphone, ArrowRight } from "lucide-react";
 
 const fontImport =
   "@import url('https://fonts.googleapis.com/css2?family=Alfa+Slab+One&family=Caveat:wght@400;600;700&family=Courier+Prime:wght@400;700&display=swap');";
@@ -194,11 +194,11 @@ export default function Contact() {
                 <a href={`mailto:${EMAIL}`} className="hover:underline">{EMAIL}</a>
               </li>
               <li className="flex items-center gap-3">
-                <Linkedin size={20} />
+                {/* <Linkedin size={20} /> */}
                 <a href={`https://${LINKEDIN}`} target="_blank" rel="noreferrer" className="hover:underline">{LINKEDIN}</a>
               </li>
               <li className="flex items-center gap-3">
-                <Github size={20} />
+                {/* <Github size={20} /> */}
                 <a href={`https://${GITHUB}`} target="_blank" rel="noreferrer" className="hover:underline">{GITHUB}</a>
               </li>
             </ul>
