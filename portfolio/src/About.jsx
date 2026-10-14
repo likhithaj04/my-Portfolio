@@ -337,18 +337,22 @@ export default function About() {
             </span>
 
             <p className="mt-2 text-lg leading-relaxed">
-              Hey, I'm Likhitha, a MERN stack developer from Bengaluru who enjoys turning ideas into
-              useful, thoughtful web experiences.
-            </p>
-            <p className="mt-4 leading-relaxed">
-              I build the whole thing, from the React screens people click on to the Node and Express
-              APIs and the MongoDB data behind them. I like clean, practical UI and backend logic that
-              is easy to read, test and improve.
-            </p>
-            <p className="mt-4 leading-relaxed">
-              Lately I've been building AI-powered features too, like an email agent that prioritizes
-              your inbox and a RAG-based assistant, always with secure auth and fast APIs underneath.
-            </p>
+  Hey, I'm Likhitha, a full-stack developer from Bengaluru who enjoys building web applications
+  that solve real-world problems.
+</p>
+
+<p className="mt-4 leading-relaxed">
+  I work across the MERN stack, building responsive React interfaces, REST APIs with Node.js and
+  Express, and data-driven applications with MongoDB. I care about writing clean, maintainable
+  code, designing intuitive user experiences, and building secure, reliable backend systems.
+</p>
+
+<p className="mt-4 leading-relaxed">
+  Beyond traditional web development, I'm exploring AI integration to make applications smarter
+  and more useful. From an AI-powered email agent that helps prioritize inboxes to RAG-based
+  assistants and intelligent productivity tools, I enjoy combining full-stack development with AI
+  to build practical solutions.
+</p>
 
             <CodeDoodle className="absolute bottom-3 right-5 hidden sm:block" />
           </div>
