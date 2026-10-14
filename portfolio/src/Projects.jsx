@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { Mail, PawPrint, Brain, Code, ImageIcon, ArrowRight } from "lucide-react";
 
 // to show a real screenshot, import it and put it in the `img` field below
@@ -6,6 +6,50 @@ import { Mail, PawPrint, Brain, Code, ImageIcon, ArrowRight } from "lucide-react
 
 const fontImport =
   "@import url('https://fonts.googleapis.com/css2?family=Alfa+Slab+One&family=Caveat:wght@400;600;700&family=Courier+Prime:wght@400;700&display=swap');";
+
+// small animations. they only start once the section scrolls into view (class "page-in")
+const animations = `
+  .pop, .fade { opacity: 0; }
+  .page-in .pop { opacity: 1; animation: letterDrop 0.6s cubic-bezier(0.2, 0.8, 0.2, 1) backwards; }
+  .page-in .fade { opacity: 1; animation: fadeUp 0.8s ease backwards; }
+  .page-in .d1 { animation-delay: 0.7s; }
+  .page-in .d2 { animation-delay: 0.9s; }
+  .page-in .d3 { animation-delay: 1.1s; }
+
+  .float { animation: floaty 3.5s ease-in-out infinite; }
+  .twinkle { animation: twinkle 1.8s ease-in-out infinite alternate; }
+
+  @keyframes letterDrop { from { opacity: 0; translate: 0 -40px; } to { opacity: 1; translate: 0 0; } }
+  @keyframes fadeUp { from { opacity: 0; translate: 0 20px; } to { opacity: 1; translate: 0 0; } }
+  @keyframes floaty { 0%, 100% { translate: 0 0; } 50% { translate: 0 -10px; } }
+  @keyframes twinkle { from { opacity: 0.3; } to { opacity: 1; } }
+
+  @media (prefers-reduced-motion: reduce) {
+    .page-in .pop, .page-in .fade { animation: none; }
+    .float, .twinkle { animation: none; }
+  }
+`;
+
+// true once the element has been scrolled into view
+function useInView(threshold = 0.1) {
+  const ref = useRef(null);
+  const [inView, setInView] = useState(false);
+
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) setInView(true);
+      },
+      { threshold }
+    );
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, [threshold]);
+
+  return [ref, inView];
+}
 
 const projects = [
   {
@@ -88,7 +132,7 @@ function ArrowDoodle({ className = "" }) {
 
 function BurstDoodle({ className = "" }) {
   return (
-    <svg viewBox="0 0 50 50" className={`h-9 w-9 text-[#1b1b1b] ${className}`} fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round">
+    <svg viewBox="0 0 50 50" className={`twinkle h-9 w-9 text-[#1b1b1b] ${className}`} fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round">
       <path d="M8 24 L22 24" />
       <path d="M12 8 L24 17" />
       <path d="M12 40 L24 31" />
@@ -116,17 +160,22 @@ const colorOrder = ["yellow", "dark", "paper"];
 const tiltOrder = ["-rotate-3", "rotate-2", "-rotate-1", "rotate-3", "-rotate-2"];
 
 // turns a word into a row of cut-out letter blocks
-function Word({ word, size }) {
+function Word({ word, size, delay = 0 }) {
   return (
     <div className="flex">
-      {word.split("").map((letter, i) => (
-        <span
-          key={i}
-          className={`inline-block px-1.5 py-1 font-['Alfa_Slab_One'] leading-none shadow-md sm:px-2.5 ${size} ${colors[colorOrder[(i + word.length) % 3]]} ${tiltOrder[i % 5]}`}
-        >
-          {letter}
-        </span>
-      ))}
+      {word.split("").map((letter, i) =>
+        letter === " " ? (
+          <span key={i} className="w-3 sm:w-6"></span>
+        ) : (
+          <span
+            key={i}
+            style={{ animationDelay: `${delay + i * 0.07}s` }}
+            className={`pop inline-block px-1.5 py-1 font-['Alfa_Slab_One'] leading-none shadow-md sm:px-2.5 ${size} ${colors[colorOrder[(i + word.length) % 3]]} ${tiltOrder[i % 5]}`}
+          >
+            {letter}
+          </span>
+        )
+      )}
     </div>
   );
 }
@@ -154,7 +203,10 @@ function ProjectCard({ project, index }) {
   const tilt = index % 2 === 0 ? "-rotate-[0.8deg]" : "rotate-[0.8deg]";
 
   return (
-    <article className={`relative bg-[#EAE5D7] p-6 pt-8 shadow-xl ${tilt}`}>
+    <article
+      style={{ animationDelay: `${0.6 + index * 0.15}s` }}
+      className={`fade relative bg-[#EAE5D7] p-6 pt-8 shadow-xl transition-transform duration-300 hover:scale-[1.02] ${tilt}`}
+    >
       <Pin className="left-3 top-3" />
 
       {project.featured && (
@@ -210,24 +262,29 @@ function ProjectCard({ project, index }) {
 /* ---------------- page ---------------- */
 
 export default function Projects() {
+  const [ref, inView] = useInView(0.1);
+
   return (
     <section
       id="projects"
-      className="relative min-h-screen overflow-hidden bg-[#8a8a8a] px-6 py-20 font-['Courier_Prime'] text-[#1b1b1b]"
+      ref={ref}
+      className={`relative min-h-screen overflow-hidden bg-[#7d7d7d] px-6 py-20 font-['Courier_Prime'] text-[#1b1b1b] ${inView ? "page-in" : ""}`}
       style={{
-        backgroundImage: "radial-gradient(rgba(0,0,0,0.18) 1px, transparent 1px)",
-        backgroundSize: "14px 14px",
+        // same wall as Home.jsx: spotlight on top, fine dot grid, dark corner
+        backgroundImage:
+          "radial-gradient(ellipse at 50% 0%, rgba(255,255,255,0.55) 0%, rgba(255,255,255,0.12) 38%, transparent 62%), radial-gradient(rgba(0,0,0,0.16) 1px, transparent 1.2px), radial-gradient(circle at 80% 80%, rgba(0,0,0,0.28), transparent 55%)",
+        backgroundSize: "100% 100%, 4px 4px, 100% 100%",
       }}
     >
-      <style>{fontImport}</style>
+      <style>{fontImport}{animations}</style>
 
       {/* corner scribbles (desktop only) */}
-      <div className="absolute left-10 top-20 hidden lg:block">
+      <div className="fade d2 absolute left-10 top-20 hidden lg:block">
         <p className="-rotate-6 font-['Caveat'] text-xl leading-tight">
           Build <br /> Solve <br /> Improve
         </p>
       </div>
-      <div className="absolute right-10 top-72 hidden -rotate-6 lg:block">
+      <div className="fade d2 absolute right-10 top-72 hidden -rotate-6 lg:block">
         <p className="font-['Caveat'] text-xl leading-tight">
           Real <br /> Projects. <br /> Real <br /> Experience.
         </p>
@@ -236,17 +293,17 @@ export default function Projects() {
 
       {/* title */}
       <div className="relative mx-auto flex max-w-3xl flex-col items-center gap-1">
-        <Word word="MY" size="text-6xl sm:text-8xl" />
-        <Word word="PROJECTS" size="text-4xl sm:text-7xl" />
+        <Word word="MY" size="text-6xl sm:text-8xl" delay={0.1} />
+        <Word word="PROJECTS" size="text-4xl sm:text-7xl" delay={0.35} />
 
         {/* sticky on the left */}
-        <div className="absolute -left-10 top-2 hidden w-28 -rotate-6 bg-[#EDB52A] p-3 pt-5 font-['Caveat'] text-lg leading-tight shadow-lg md:block">
+        <div className="fade d1 absolute -left-10 top-2 hidden w-28 -rotate-6 bg-[#EDB52A] p-3 pt-5 font-['Caveat'] text-lg leading-tight shadow-lg md:block">
           <Pin className="left-2 top-2" />
           Ideas into working apps.
         </div>
 
         {/* small lined note on the right */}
-        <div className="absolute -right-14 -top-2 hidden w-44 rotate-3 bg-[#EAE6DC] p-3 pt-5 font-['Caveat'] text-lg leading-tight shadow-lg md:block">
+        <div className="fade d1 absolute -right-14 -top-2 hidden w-44 rotate-3 bg-[#EAE6DC] p-3 pt-5 font-['Caveat'] text-lg leading-tight shadow-lg md:block">
           <Pin className="left-1/2 top-1.5" />
           Full-Stack, Web Apps, APIs, Databases, Integrations...
         </div>
@@ -265,14 +322,14 @@ export default function Projects() {
 
       {/* bottom scribbles */}
       <div className="mx-auto mt-14 flex max-w-6xl items-end justify-between px-2">
-        <div className="-rotate-6">
+        <div className="fade d3 -rotate-6">
           <ArrowDoodle className="-rotate-[100deg]" />
           <p className="font-['Caveat'] text-xl leading-tight">
             More projects <br /> coming soon...
           </p>
           <ScribbleLine />
         </div>
-        <div className="-rotate-6 text-right">
+        <div className="fade d3 -rotate-6 text-right">
           <p className="font-['Caveat'] text-xl leading-tight">
             Turning ideas <br /> into useful <br /> things.
           </p>
