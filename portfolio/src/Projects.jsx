@@ -1,8 +1,12 @@
 import React, { useEffect, useRef, useState } from "react";
-import { Mail, PawPrint, Brain, Code, ImageIcon, ArrowRight } from "lucide-react";
+import { Mail, PawPrint, Brain, Code, Store, ImageIcon, ArrowRight } from "lucide-react";
 
-// to show a real screenshot, import it and put it in the `img` field below
+// project screenshots: import each one and put it in the project's `img` field below
+// (fix the path to match where your assets folder is)
 // import inboxly from "../src/assets/inboxly.png";
+import resqheart from "../src/assets/resQheart.png";
+import aianalyser from "../src/assets/analyser.png";
+// import dbug from "../src/assets/dbug.png";
 
 const fontImport =
   "@import url('https://fonts.googleapis.com/css2?family=Alfa+Slab+One&family=Caveat:wght@400;600;700&family=Courier+Prime:wght@400;700&display=swap');";
@@ -51,71 +55,94 @@ function useInView(threshold = 0.1) {
   return [ref, inView];
 }
 
+// 5 projects -> shows 3 in the first row and 2 in the second
+// leave github as "" if there is no repo link yet, the link just won't show
 const projects = [
   {
     id: 1,
     title: "Inboxly",
+    kicker: "AI email assistant",
     featured: true,
-    tech: "React, Node.js/Express, PostgreSQL + Prisma, Gmail API, Groq API, JWT",
+    blurb: "An AI email agent that reads your Gmail and puts the important mail first.",
+    stack: ["React", "Node/Express", "PostgreSQL", "Prisma", "Gmail API", "Groq", "JWT"],
     points: [
-      "AI email agent prioritizes important Gmail.",
       "Behavioral scoring for email actions.",
       "On-demand Groq summaries to reduce LLM calls.",
-      "Caching/temp storage/pagination to reduce DB load.",
+      "Caching and pagination to reduce DB load.",
       "OAuth 2.0 + JWT Gmail security.",
     ],
-    github: "#",
-    live: "#",
-    img: null, // e.g. inboxly
+    github: "",
+    live: "",
+    img: null, // inboxly
     icon: Mail,
   },
   {
     id: 2,
     title: "ResQHeart",
+    kicker: "Pet welfare system",
     featured: false,
-    tech: "React, Node.js/Express, MongoDB, JWT",
+    blurb: "A pet welfare platform to find your fur partner, report lost pets, donate and help with their next meal.",
+    stack: ["React", "Node/Express", "MongoDB", "JWT"],
     points: [
-      "Emergency platform for lost & found pets.",
       "Post, search and match lost/found pets.",
       "Real-time updates and notifications.",
       "User authentication and secure access.",
     ],
-    github: "#",
+    github: "",
     live: "https://res-q-heart.vercel.app/",
-    img: null,
+    img:  resqheart,
     icon: PawPrint,
   },
   {
     id: 3,
     title: "AIAnalyser",
+    kicker: "Resume + LinkedIn analysis",
     featured: false,
-    tech: "React, Node.js/Express, MongoDB, Tailwind CSS, Groq, Pinecone",
+    blurb: "Upload a resume or LinkedIn profile and get an AI breakdown of how strong it is.",
+    stack: ["React", "Node/Express", "MongoDB", "Tailwind", "Groq", "Pinecone"],
     points: [
-      "Resume + LinkedIn analysis with AI.",
-      "Performance, functionality, accuracy, trustability cards.",
+      "Performance, functionality, accuracy and trustability cards.",
       "RAG exploration with Pinecone + LangChain.",
-      "Clean and focused UI (minimal scrollbars).",
+      "Clean, focused UI with minimal scrollbars.",
     ],
-    github: "#",
-    live: "#",
-    img: null,
+    github: "",
+    live: "",
+    img:  aianalyser,
     icon: Brain,
   },
   {
     id: 4,
     title: "D-BUG",
+    kicker: "AI code debugger",
     featured: false,
-    tech: "React, Express.js, Supabase",
+    blurb: "A ChatGPT-style chat where you paste broken code and get help fixing it.",
+    stack: ["React", "Express", "Supabase"],
     points: [
-      "AI code debugger with chat interface.",
+      "Chat interface for debugging code with AI.",
       "Supabase auth with token + threadId.",
-      "Reducer for message/response/loading/error.",
-      "ChatGPT-like layout with Font Awesome.",
+      "Reducer for message / response / loading / error.",
     ],
-    github: "#",
-    live: "#",
-    img: null,
+    github: "",
+    live: "",
+    img: null, // dbug
     icon: Code,
+  },
+  {
+    id: 5,
+    title: "Atlier",
+    kicker: "A demo boutique",
+    featured: false,
+    blurb: "A demo web design for a boutique, with the designs, contact details and a nice place for customers to browse.",
+    stack: ["React", "Node"],
+    points: [
+      "Boutique collection showcase for browsing.",
+      "Contact section for customers.",
+      "Responsive layout, deployed on Vercel.",
+    ],
+    github: "",
+    live: "https://atlier-ten.vercel.app/",
+    img: null, // atlier
+    icon: Store,
   },
 ];
 
@@ -201,11 +228,13 @@ function ProjectCard({ project, index }) {
   const Icon = project.icon;
   // small alternate tilt so the cards feel pinned by hand
   const tilt = index % 2 === 0 ? "-rotate-[0.8deg]" : "rotate-[0.8deg]";
+  // main link: live site first, then the repo
+  const mainLink = project.live || project.github;
 
   return (
     <article
       style={{ animationDelay: `${0.6 + index * 0.15}s` }}
-      className={`fade relative bg-[#EAE5D7] p-6 pt-8 shadow-xl transition-transform duration-300 hover:scale-[1.02] ${tilt}`}
+      className={`fade relative flex w-full flex-col bg-[#EAE5D7] p-6 pt-8 shadow-xl transition-transform duration-300 hover:scale-[1.02] md:w-[calc(50%-1.25rem)] lg:w-[calc(33.333%-1.67rem)] ${tilt}`}
     >
       <Pin className="left-3 top-3" />
 
@@ -216,18 +245,31 @@ function ProjectCard({ project, index }) {
       )}
 
       <div className="flex items-start justify-between gap-3">
-        <h3 className="inline-block bg-[#161616] px-3 py-1 text-xl font-bold text-[#EDE9DF]">{project.title}</h3>
+        <div>
+          <span className="text-[11px] uppercase tracking-widest text-[#8a5f06]">No. 0{project.id}</span>
+          <h3 className="mt-1 inline-block bg-[#161616] px-3 py-1 text-xl font-bold text-[#EDE9DF]">{project.title}</h3>
+          <p className="mt-1 font-['Caveat'] text-lg leading-none text-[#1b1b1b]/70">{project.kicker}</p>
+        </div>
         <Icon size={30} strokeWidth={1.5} className="shrink-0" />
       </div>
 
-      <p className="mt-3 text-xs leading-relaxed">{project.tech}</p>
+      {/* tech stack tags */}
+      <ul className="mt-3 flex flex-wrap gap-1.5">
+        {project.stack.map((tech) => (
+          <li key={tech} className="border border-[#1b1b1b] px-2 py-0.5 text-[10px] uppercase tracking-wide">
+            {tech}
+          </li>
+        ))}
+      </ul>
 
       {/* image goes here */}
       <div className="mt-4">
         <ImageSlot src={project.img} title={project.title} />
       </div>
 
-      <ul className="mt-4 space-y-1">
+      <p className="mt-4 text-sm leading-relaxed">{project.blurb}</p>
+
+      <ul className="mt-3 space-y-1">
         {project.points.map((point) => (
           <li key={point} className="flex gap-2 font-['Caveat'] text-lg leading-tight">
             <span className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-[#E9A81F]"></span>
@@ -236,24 +278,31 @@ function ProjectCard({ project, index }) {
         ))}
       </ul>
 
-      <div className="mt-5 flex items-center justify-between text-sm">
+      {/* links stay at the bottom so all cards line up */}
+      <div className="mt-auto flex items-center justify-between pt-5 text-sm">
         <span>
-          <a href={project.github} target="_blank" rel="noreferrer" className="underline hover:text-[#b57d0a]">
-            GitHub
-          </a>
-          {" | "}
-          <a href={project.live} target="_blank" rel="noreferrer" className="underline hover:text-[#b57d0a]">
-            Live
-          </a>
+          {project.github && (
+            <a href={project.github} target="_blank" rel="noreferrer" className="underline hover:text-[#b57d0a]">
+              GitHub
+            </a>
+          )}
+          {project.github && project.live && " | "}
+          {project.live && (
+            <a href={project.live} target="_blank" rel="noreferrer" className="underline hover:text-[#b57d0a]">
+              Live
+            </a>
+          )}
         </span>
-        <a
-          href={project.live}
-          target="_blank"
-          rel="noreferrer"
-          className="flex items-center gap-1 font-['Caveat'] text-xl font-bold hover:text-[#b57d0a]"
-        >
-          View Project <ArrowRight size={16} />
-        </a>
+        {mainLink && (
+          <a
+            href={mainLink}
+            target="_blank"
+            rel="noreferrer"
+            className="flex items-center gap-1 font-['Caveat'] text-xl font-bold hover:text-[#b57d0a]"
+          >
+            View Project <ArrowRight size={16} />
+          </a>
+        )}
       </div>
     </article>
   );
@@ -314,7 +363,7 @@ export default function Projects() {
       </div>
 
       {/* project cards */}
-      <div className="mx-auto mt-16 grid max-w-6xl gap-10 md:grid-cols-2">
+      <div className="mx-auto mt-16 flex max-w-7xl flex-wrap justify-center gap-10">
         {projects.map((project, i) => (
           <ProjectCard key={project.id} project={project} index={i} />
         ))}
