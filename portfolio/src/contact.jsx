@@ -272,7 +272,7 @@ export default function Contact() {
               <Lightbulb size={22} /> Quick Note
             </div>
             <p className="mt-2 font-['Caveat'] text-xl leading-tight">
-              I'm open to opportunities, collaborations, freelance projects and interesting conversations!
+              I'm open to opportunities, collaborations,  interesting conversations!
             </p>
           </div>
         </div>
