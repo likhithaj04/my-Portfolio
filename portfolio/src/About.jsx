@@ -4,7 +4,15 @@ import React, { useEffect, useRef, useState } from "react";
 const fontImport =
   "@import url('https://fonts.googleapis.com/css2?family=Alfa+Slab+One&family=Caveat:wght@400;600;700&family=Courier+Prime:wght@400;700&display=swap');";
 
-const skills = ["React", "Node.js", "Express", "MongoDB", "JavaScript", "REST APIs", "Tailwind", "Git"];
+// skills pulled from the resume, grouped the same way
+const toolkit = [
+  { group: "Programming", items: ["JavaScript"] },
+  { group: "Frontend", items: ["HTML", "CSS", "React.js", "Tailwind CSS"] },
+  { group: "Backend", items: ["Node.js", "Express.js", "REST APIs", "Prisma"] },
+  { group: "Database", items: ["MongoDB", "PostgreSQL"] },
+  { group: "Tools", items: ["Git", "GitHub", "Cloudinary", "Postman", "Supabase"] },
+  { group: "Auth & Integrations", items: ["JWT", "OAuth 2.0", "Supabase Auth"] },
+];
 
 // small animations. they only start once the section scrolls into view (class "about-in")
 const animations = `
@@ -254,22 +262,64 @@ export default function About() {
         <SpiralDoodle className="absolute -left-14 bottom-0 hidden rotate-12 md:block" />
       </div>
 
-      {/* main layout: sticky | note | sticky */}
-      <div className="mx-auto mt-14 grid max-w-6xl items-end gap-10 lg:grid-cols-[1fr_1.6fr_1fr]">
-        {/* left sticky */}
-        <div className="fade d2 relative order-2 mx-auto w-52 -rotate-3 bg-[#E6E1D3] transition-transform duration-300 hover:rotate-0 hover:scale-105 p-5 pt-8 shadow-lg lg:order-1 lg:mx-0 lg:justify-self-end">
-          <Pin className="left-3 top-3" />
-          <h3 className="font-['Caveat'] text-2xl font-bold underline">Beyond code</h3>
-          <p className="mt-2 font-['Caveat'] text-xl leading-tight">
-            Curiosity, writing, and noticing the little details.
-          </p>
-          <ArrowDoodle className="absolute -right-14 -top-12 hidden -rotate-12 lg:block" />
+      {/* main layout: toolkit page + sticky | note | sticky */}
+      <div className="mx-auto mt-14 grid max-w-7xl gap-10 lg:grid-cols-[1.05fr_1.9fr_0.85fr] lg:items-center">
+        {/* left column: toolkit page + "beyond code" sticky */}
+        <div className="order-2 flex flex-col items-center gap-10 lg:order-1 lg:items-end">
+          {/* toolkit page (lined notebook paper) */}
+          <div className="fade d2 relative w-full max-w-xs -rotate-2 transition-transform duration-300 hover:rotate-0 hover:scale-105 lg:max-w-none">
+            <div
+              className="relative px-6 pb-8 pt-12 pl-12 shadow-xl"
+              style={{
+                backgroundColor: "#EDE9DF",
+                // lined notebook paper with a red margin line
+                backgroundImage:
+                  "linear-gradient(90deg, transparent 34px, rgba(190,60,60,0.45) 34px, rgba(190,60,60,0.45) 36px, transparent 36px), repeating-linear-gradient(transparent 0, transparent 27px, rgba(40,80,160,0.22) 27px, rgba(40,80,160,0.22) 28px)",
+                clipPath:
+                  "polygon(0 1%, 25% 0, 55% 1.5%, 80% 0, 100% 1%, 99% 35%, 100% 65%, 99% 100%, 70% 98.5%, 40% 100%, 15% 98.5%, 0 100%, 1% 55%)",
+              }}
+            >
+              <Pin className="left-3 top-3" />
+
+              <span className="absolute left-10 top-0 rotate-2 bg-[#E9A81F] px-4 py-1 font-['Caveat'] text-xl font-bold">
+                My toolkit
+              </span>
+
+              <div className="space-y-3">
+                {toolkit.map(({ group, items }) => (
+                  <div key={group}>
+                    <h4 className="font-['Caveat'] text-xl font-bold leading-none underline">{group}</h4>
+                    <ul className="mt-1.5 flex flex-wrap gap-1.5">
+                      {items.map((item) => (
+                        <li
+                          key={item}
+                          className="rounded border-2 border-[#1b1b1b] px-2 py-0 font-['Special_Elite'] text-lg leading-snug"
+                        >
+                          {item}
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                ))}
+              </div>
+            </div>
+            <span className="absolute -top-2 right-8 h-5 w-14 -rotate-6 bg-[#E9A81F]/70"></span>
+          </div>
+
+          {/* sticky */}
+          <div className="fade d2 relative w-52 -rotate-3 bg-[#E6E1D3] p-5 pt-8 shadow-lg transition-transform duration-300 hover:rotate-0 hover:scale-105">
+            <Pin className="left-3 top-3" />
+            <h3 className="font-['Caveat'] text-2xl font-bold underline">Beyond code</h3>
+            <p className="mt-2 font-['Caveat'] text-xl leading-tight">
+              Curiosity, writing, and noticing the little details.
+            </p>
+          </div>
         </div>
 
-        {/* the one main note */}
+        {/* the one main note (a little wider now) */}
         <div className="fade d1 relative order-1 lg:order-2">
           <div
-            className="relative rotate-[0.5deg] bg-[#EDE9DF] px-8 pb-10 pt-12 shadow-xl"
+            className="relative rotate-[0.5deg] bg-[#EDE9DF] px-10 pb-14 pt-14 shadow-xl sm:px-14"
             style={{
               // grid paper + slightly uneven torn edge
               backgroundImage:
@@ -295,18 +345,10 @@ export default function About() {
               APIs and the MongoDB data behind them. I like clean, practical UI and backend logic that
               is easy to read, test and improve.
             </p>
-
-            <h4 className="mt-6 font-bold underline">My toolkit</h4>
-            <ul className="mt-3 flex flex-wrap gap-2">
-              {skills.map((skill) => (
-                <li
-                  key={skill}
-                  className="rounded border-2 border-[#1b1b1b] px-3 py-0.5 font-['Caveat'] text-lg"
-                >
-                  {skill}
-                </li>
-              ))}
-            </ul>
+            <p className="mt-4 leading-relaxed">
+              Lately I've been building AI-powered features too, like an email agent that prioritizes
+              your inbox and a RAG-based assistant, always with secure auth and fast APIs underneath.
+            </p>
 
             <CodeDoodle className="absolute bottom-3 right-5 hidden sm:block" />
           </div>
@@ -317,7 +359,7 @@ export default function About() {
         </div>
 
         {/* right sticky */}
-        <div className="fade d3 relative order-3 mx-auto w-56 rotate-3 bg-[#EDB52A] transition-transform duration-300 hover:rotate-0 hover:scale-105 p-5 pt-8 shadow-lg lg:mx-0 lg:justify-self-start">
+        <div className="fade d3 relative order-3 mx-auto w-56 rotate-3 bg-[#EDB52A] p-5 pt-8 shadow-lg transition-transform duration-300 hover:rotate-0 hover:scale-105 lg:mx-0 lg:justify-self-start">
           <Pin className="right-3 top-3" />
           <h3 className="font-['Caveat'] text-2xl font-bold uppercase underline">Currently exploring</h3>
           <p className="mt-2 font-['Caveat'] text-xl leading-tight">
