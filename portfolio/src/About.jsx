@@ -337,7 +337,7 @@ export default function About() {
             </span>
 
             <p className="mt-2 text-lg leading-relaxed">
-  Hey, I'm Likhitha, a full-stack developer from Bengaluru who enjoys building web applications
+  Hey, I'm Likhitha, a full-stack developer  who enjoys building web applications
   that solve real-world problems.
 </p>
 
