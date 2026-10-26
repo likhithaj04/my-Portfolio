@@ -3,12 +3,12 @@ import { Mail, PawPrint, Brain, Code, Store, ImageIcon, ArrowRight } from "lucid
 
 // project screenshots: import each one and put it in the project's `img` field below
 // (fix the path to match where your assets folder is)
-import inboxly from "../src/assets/inboxly.png";
-import resqheart from "../src/assets/resQheart.png";
-import aianalyser from "../src/assets/analyser.png";
+import inboxly from "./assets/inboxly.png";
+import resqheart from "./assets/resQheart.png";
+import aianalyser from "./assets/analyser.png";
 // import dbug from "../src/assets/dbug.png";
-import petAssistant from '../src/assets/petAssistant.png'
-import trackly from '../src/assets/trackly.png'
+import petAssistant from './assets/petAssistant.png'
+import trackly from './assets/trackly.png'
 
 const fontImport =
   "@import url('https://fonts.googleapis.com/css2?family=Alfa+Slab+One&family=Caveat:wght@400;600;700&family=Courier+Prime:wght@400;700&display=swap');";
