@@ -198,7 +198,7 @@ export default function Contact() {
       {/* form + side notes */}
       <div className="mx-auto mt-16 grid max-w-5xl gap-10 lg:grid-cols-[1.2fr_1fr]">
         {/* the message form */}
-        <form
+        {/* <form
           onSubmit={handleSubmit}
           className="fade d1 relative bg-[#EAE5D7] px-8 pb-10 pt-10 shadow-xl"
           style={{
@@ -230,7 +230,7 @@ export default function Contact() {
             </button>
             {sent && <span className="font-['Caveat'] text-xl">Opening your mail app...</span>}
           </div>
-        </form>
+        </form> */}
 
         {/* right column */}
         <div className="space-y-8">

@@ -3,10 +3,12 @@ import { Mail, PawPrint, Brain, Code, Store, ImageIcon, ArrowRight } from "lucid
 
 // project screenshots: import each one and put it in the project's `img` field below
 // (fix the path to match where your assets folder is)
-// import inboxly from "../src/assets/inboxly.png";
+import inboxly from "../src/assets/inboxly.png";
 import resqheart from "../src/assets/resQheart.png";
 import aianalyser from "../src/assets/analyser.png";
 // import dbug from "../src/assets/dbug.png";
+import petAssistant from '../src/assets/petAssistant.png'
+import trackly from '../src/assets/trackly.png'
 
 const fontImport =
   "@import url('https://fonts.googleapis.com/css2?family=Alfa+Slab+One&family=Caveat:wght@400;600;700&family=Courier+Prime:wght@400;700&display=swap');";
@@ -73,7 +75,7 @@ const projects = [
     ],
     github: "",
     live: "",
-    img: null, // inboxly
+    img: inboxly, 
     icon: Mail,
   },
   {
@@ -105,45 +107,49 @@ const projects = [
       "RAG exploration with Pinecone + LangChain.",
       "Clean, focused UI with minimal scrollbars.",
     ],
-    github: "",
-    live: "",
+    github: "https://github.com/likhithaj04/AiAnalyser",
+    live: "https://ai-analyser-beta.vercel.app",
     img:  aianalyser,
     icon: Brain,
   },
-  {
-    id: 4,
-    title: "D-BUG",
-    kicker: "AI code debugger",
-    featured: false,
-    blurb: "A ChatGPT-style chat where you paste broken code and get help fixing it.",
-    stack: ["React", "Express", "Supabase"],
-    points: [
-      "Chat interface for debugging code with AI.",
-      "Supabase auth with token + threadId.",
-      "Reducer for message / response / loading / error.",
-    ],
-    github: "",
-    live: "",
-    img: null, // dbug
-    icon: Code,
-  },
-  {
-    id: 5,
-    title: "Atlier",
-    kicker: "A demo boutique",
-    featured: false,
-    blurb: "A demo web design for a boutique, with the designs, contact details and a nice place for customers to browse.",
-    stack: ["React", "Node"],
-    points: [
-      "Boutique collection showcase for browsing.",
-      "Contact section for customers.",
-      "Responsive layout, deployed on Vercel.",
-    ],
-    github: "",
-    live: "https://atlier-ten.vercel.app/",
-    img: null, // atlier
-    icon: Store,
-  },
+{
+  id: 4,
+  title: "Pet Assistant",
+  kicker: "AI-Powered Pet Care Assistant",
+  featured: false,
+  blurb:
+    "An AI-powered assistant that helps pet owners understand pet health, nutrition, and vaccination needs through conversational guidance.",
+  stack: ["React", "Node.js", "Express", "AI", "RAG"],
+  points: [
+    "Chat interface for pet health, nutrition, and vaccination queries.",
+    "AI-powered responses designed to provide relevant pet care guidance.",
+    "Retrieval-Augmented Generation (RAG) approach for context-aware answers.",
+  ],
+  github: "https://github.com/likhithaj04/Pet-careAssistant",
+  live: "https://pet-care-assistant2.vercel.app/",
+  img: petAssistant,
+  icon: PawPrint,
+},
+
+{
+  id: 5,
+  title: "Trackly",
+  kicker: "Job application tracker",
+  featured: false,
+  blurb:
+    "A job tracking application that helps users organize job applications, monitor application progress, and manage their job search in one place.",
+  stack: ["React", "Node.js", "Express", "MongoDB"],
+  points: [
+    "Track job applications across different hiring stages.",
+    "Manage company details, job roles, and application status.",
+    "Organize and monitor job search progress through a centralized dashboard.",
+  ],
+  github: "https://github.com/likhithaj04/Trackly",
+  live: "https://trackly-alpha-silk.vercel.app",
+  img: trackly,
+  icon: Code,
+},
+
 ];
 
 /* ---------------- doodles ---------------- */
