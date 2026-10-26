@@ -3,7 +3,7 @@ import { Mail, PawPrint, Brain, Code, Store, ImageIcon, ArrowRight } from "lucid
 
 // project screenshots: import each one and put it in the project's `img` field below
 // (fix the path to match where your assets folder is)
-import inboxly from "./assets/inboxly.png";
+import inboxly from "./assets/Inboxly.png";
 import resqheart from "./assets/resQheart.png";
 import aianalyser from "./assets/analyser.png";
 // import dbug from "../src/assets/dbug.png";
